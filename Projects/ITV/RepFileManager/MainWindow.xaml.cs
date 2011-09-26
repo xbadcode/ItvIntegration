@@ -4,6 +4,7 @@ using System.Windows;
 using System.Xml.Serialization;
 using FiresecClient;
 using ItvIntergation.Ngi;
+using System.Windows.Media;
 
 namespace RepFileManager
 {
@@ -16,10 +17,17 @@ namespace RepFileManager
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FiresecManager.Connect("adm", "");
+            bool result = FiresecManager.Connect("adm", "");
+            if (result == false)
+            {
+                MessageBox.Show("Не удается соединиться с сервером");
+                return;
+            }
+
+            Directory.CreateDirectory("BMP");
 
             var repositoryModule = new repositoryModule();
-            repositoryModule.name = "Устройства Рубеж";
+            repositoryModule.name = "Rubezh devices";
             repositoryModule.version = "1.0.0";
             repositoryModule.port = "1234";
             var repository = new repository();
@@ -40,6 +48,10 @@ namespace RepFileManager
             {
                 serializer.Serialize(fileStream, repositoryModule);
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

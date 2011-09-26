@@ -49,13 +49,13 @@ namespace FiresecAPI
         string DeviceGetInformation(DeviceConfiguration deviceConfiguration, Guid deviceUID);
 
         [OperationContract]
-        string DeviceGetSerialList(DeviceConfiguration deviceConfiguration, Guid deviceUID);
+        List<string> DeviceGetSerialList(DeviceConfiguration deviceConfiguration, Guid deviceUID);
 
         [OperationContract]
-        string DeviceUpdateFirmware(DeviceConfiguration deviceConfiguration, Guid deviceUID, string content);
+        string DeviceUpdateFirmware(DeviceConfiguration deviceConfiguration, Guid deviceUID, byte[] bytes);
 
         [OperationContract]
-        string DeviceVerifyFirmwareVersion(DeviceConfiguration deviceConfiguration, Guid deviceUID, string content);
+        string DeviceVerifyFirmwareVersion(DeviceConfiguration deviceConfiguration, Guid deviceUID, byte[] bytes);
 
         [OperationContract]
         string DeviceReadEventLog(DeviceConfiguration deviceConfiguration, Guid deviceUID);
@@ -65,6 +65,12 @@ namespace FiresecAPI
 
         [OperationContract]
         DeviceConfiguration DeviceReadConfiguration(DeviceConfiguration deviceConfiguration, Guid deviceUID);
+
+        [OperationContract]
+        List<string> DeviceCustomFunctionList(Guid driverUID);
+
+        [OperationContract]
+        string DeviceCustomFunctionExecute(DeviceConfiguration deviceConfiguration, Guid deviceUID, string functionName);
 
         [OperationContract]
         SystemConfiguration GetSystemConfiguration();

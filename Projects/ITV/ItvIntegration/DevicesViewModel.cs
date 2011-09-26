@@ -10,7 +10,9 @@ namespace ItvIntegration
         {
             bool result = FiresecManager.Connect("adm", "");
             if (result == false)
+            {
                 return;
+            }
 
             Devices = new ObservableCollection<DeviceViewModel>();
             foreach (var deviceState in FiresecManager.DeviceStates.DeviceStates)

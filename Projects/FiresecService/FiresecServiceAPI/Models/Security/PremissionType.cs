@@ -1,22 +1,5 @@
-﻿using System.Runtime.Serialization;
-
-namespace FiresecAPI.Models
+﻿namespace FiresecAPI.Models
 {
-    [DataContract]
-    public class Perimission
-    {
-        [DataMember]
-        public string Id { get; set; }
-
-        [DataMember]
-        public string Name { get; set; }
-
-        public PermissionType PermissionType
-        {
-            get { return (PermissionType) int.Parse(Id); }
-        }
-    }
-
     public enum PermissionType
     {
         Adm_ChangeConfigDb = 6,
@@ -28,7 +11,7 @@ namespace FiresecAPI.Models
         Oper_AutoOn = 20,
         Oper_Login = 1,
         Oper_Logout = 2,
-        Oper_LogoutNoPassword = 13,
+        Oper_LogoutWithoutPassword = 13,
         Oper_AddToIgnoreList = 16,
         Oper_AdditionalMode = 11,
         Oper_ChangeLayout = 18,
