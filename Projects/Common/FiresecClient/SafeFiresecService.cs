@@ -4,7 +4,6 @@ using System.ServiceModel;
 using System.Timers;
 using FiresecAPI;
 using FiresecAPI.Models;
-using System.IO;
 
 namespace FiresecClient
 {
@@ -56,8 +55,11 @@ namespace FiresecClient
 
         public void StopPing()
         {
-            _pingTimer.Enabled = false;
-            _pingTimer.Dispose();
+            if (_pingTimer != null)
+            {
+                _pingTimer.Enabled = false;
+                _pingTimer.Dispose();
+            }
         }
 
         private void OnTimerPing(object source, ElapsedEventArgs e)
@@ -65,7 +67,7 @@ namespace FiresecClient
             Ping();
         }
 
-        public bool Connect(string userName, string password)
+        public bool? Connect(string userName, string password)
         {
             try
             {
@@ -75,10 +77,10 @@ namespace FiresecClient
             {
                 OnConnectionLost();
             }
-            return false;
+            return null;
         }
 
-        public bool Reconnect(string userName, string password)
+        public bool? Reconnect(string userName, string password)
         {
             try
             {
@@ -88,7 +90,7 @@ namespace FiresecClient
             {
                 OnConnectionLost();
             }
-            return false;
+            return null;
         }
 
         public void Disconnect()
@@ -252,11 +254,11 @@ namespace FiresecClient
             }
         }
 
-        public string DeviceUpdateFirmware(DeviceConfiguration deviceConfiguration, Guid deviceUID, byte[] bytes)
+        public string DeviceUpdateFirmware(DeviceConfiguration deviceConfiguration, Guid deviceUID, byte[] bytes, string fileName)
         {
             try
             {
-                return _iFiresecService.DeviceUpdateFirmware(deviceConfiguration, deviceUID, bytes);
+                return _iFiresecService.DeviceUpdateFirmware(deviceConfiguration, deviceUID, bytes, fileName);
             }
             catch
             {
@@ -265,11 +267,11 @@ namespace FiresecClient
             }
         }
 
-        public string DeviceVerifyFirmwareVersion(DeviceConfiguration deviceConfiguration, Guid deviceUID, byte[] bytes)
+        public string DeviceVerifyFirmwareVersion(DeviceConfiguration deviceConfiguration, Guid deviceUID, byte[] bytes, string fileName)
         {
             try
             {
-                return _iFiresecService.DeviceVerifyFirmwareVersion(deviceConfiguration, deviceUID, bytes);
+                return _iFiresecService.DeviceVerifyFirmwareVersion(deviceConfiguration, deviceUID, bytes, fileName);
             }
             catch
             {
@@ -304,7 +306,7 @@ namespace FiresecClient
             }
         }
 
-        public List<string> DeviceCustomFunctionList(Guid driverUID)
+        public List<DeviceCustomFunction> DeviceCustomFunctionList(Guid driverUID)
         {
             try
             {
