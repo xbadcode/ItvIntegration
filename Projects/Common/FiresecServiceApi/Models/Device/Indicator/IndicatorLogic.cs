@@ -9,7 +9,7 @@ namespace FiresecAPI.Models
     {
         public IndicatorLogic()
         {
-            Zones = new List<ulong?>();
+            Zones = new List<ulong>();
         }
 
         public Device Device { get; set; }
@@ -18,7 +18,7 @@ namespace FiresecAPI.Models
         public IndicatorLogicType IndicatorLogicType { get; set; }
 
         [DataMember]
-        public List<ulong?> Zones { get; set; }
+        public List<ulong> Zones { get; set; }
 
         [DataMember]
         public Guid DeviceUID { get; set; }
@@ -44,19 +44,18 @@ namespace FiresecAPI.Models
                         if (DeviceUID != Guid.Empty)
                         {
                             var deviceString = "Устр: ";
-                            deviceString += Device.Driver.ShortName;
-                            deviceString += Device.DottedAddress;
+                            deviceString += Device.PresentationAddressDriver;
                             return deviceString;
                         }
                         break;
                     }
                 case IndicatorLogicType.Zone:
                     {
-                        if (Zones != null)
+                        if ((Zones != null) && (Zones.Count > 0))
                         {
                             var zonesString = "Зоны: ";
 
-                            for (int i = 0; i < Zones.Count; ++i)
+                            for (int i = 0; i < Zones.Count; i++)
                             {
                                 if (i > 0)
                                     zonesString += ",";

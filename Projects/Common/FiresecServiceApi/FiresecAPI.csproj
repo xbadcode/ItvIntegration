@@ -108,10 +108,14 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>StrongNameKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -180,6 +184,7 @@
     <Compile Include="Models\System\InstructionType.cs" />
     <Compile Include="Models\Security\RemoteAccess.cs" />
     <Compile Include="Models\System\SubsystemType.cs" />
+    <Compile Include="Models\Video\Camera.cs" />
     <Compile Include="Models\Zone\Clause.cs" />
     <Compile Include="Models\Zone\GuardZoneType.cs" />
     <Compile Include="Models\Zone\ZoneLogicJoinOperator.cs" />
@@ -199,6 +204,33 @@
     <Compile Include="Models\States\DriverDriverState.cs" />
     <Compile Include="Models\States\ParentDeviceState.cs" />
     <Compile Include="Models\Configuration\SystemConfiguration.cs" />
+    <Compile Include="XModels\Binary\BinaryFormatterBase.cs" />
+    <Compile Include="XModels\Binary\DeviceBinaryFormatter.cs" />
+    <Compile Include="XModels\Configuration\XDeviceConfiguration.cs" />
+    <Compile Include="XModels\Configuration\XDriversConfiguration.cs" />
+    <Compile Include="XModels\Configuration\XManager.cs" />
+    <Compile Include="XModels\Device\DeviceCreationExtention.cs" />
+    <Compile Include="XModels\Device\XDevice.cs" />
+    <Compile Include="XModels\Device\XDeviceParameter.cs" />
+    <Compile Include="XModels\Device\XProperty.cs" />
+    <Compile Include="XModels\Driver\XDriver.cs" />
+    <Compile Include="XModels\Driver\XDriverDeviceParameter.cs" />
+    <Compile Include="XModels\Driver\XDriverDeviceParameterType.cs" />
+    <Compile Include="XModels\Driver\XDriverProperty.cs" />
+    <Compile Include="XModels\Driver\XDriverPropertyParameter.cs" />
+    <Compile Include="XModels\Driver\XDriverPropertyTypeEnum.cs" />
+    <Compile Include="XModels\Driver\XDriverType.cs" />
+    <Compile Include="XModels\Formula\FormulaOperation.cs" />
+    <Compile Include="XModels\Formula\FormulaOperationType.cs" />
+    <Compile Include="XModels\Logic\ClauseJounOperationType.cs" />
+    <Compile Include="XModels\Logic\ClauseOperandType.cs" />
+    <Compile Include="XModels\Logic\ClauseOperationType.cs" />
+    <Compile Include="XModels\Logic\StateLogic.cs" />
+    <Compile Include="XModels\Logic\XClause.cs" />
+    <Compile Include="XModels\Logic\XDeviceLogic.cs" />
+    <Compile Include="XModels\States\XDeviceState.cs" />
+    <Compile Include="XModels\States\XStateType.cs" />
+    <Compile Include="XModels\Zone\XZone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\System\AlarmType.cs" />
@@ -243,7 +275,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="StrongNameKey.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -254,6 +285,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>if /I "$(ConfigurationName)" == "Release" Eazfuscator.NET.exe "$(TargetPath)" --msbuild-project-path "$(ProjectPath)" --msbuild-project-configuration "$(ConfigurationName)" --msbuild-project-platform "$(PlatformName)" --msbuild-solution-path "$(SolutionPath)" -n --newline-flush -v 3.2</PostBuildEvent>
+    <PostBuildEvent>if /I "$(ConfigurationName)" == "Release" Eazfuscator.NET.exe "$(TargetPath)" --msbuild-project-path "$(ProjectPath)" --msbuild-project-configuration "$(ConfigurationName)" --msbuild-project-platform "$(PlatformName)" --msbuild-solution-path "$(SolutionPath)" -n --newline-flush -v 3.3</PostBuildEvent>
   </PropertyGroup>
 </Project>

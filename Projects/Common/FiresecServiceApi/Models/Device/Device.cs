@@ -65,6 +65,20 @@ namespace FiresecAPI.Models
         [DataMember]
         public bool IsMonitoringDisabled { get; set; }
 
+        [DataMember]
+        public bool IsAltInterface { get; set; }
+
+        public string EditingPresentationAddress
+        {
+            get
+            {
+                if (Driver.HasAddress == false)
+                    return "";
+
+                return AddressConverter.IntToStringAddress(Driver, IntAddress);
+            }
+        }
+
         public string PresentationAddress
         {
             get
@@ -76,7 +90,9 @@ namespace FiresecAPI.Models
 
                 if (Driver.IsChildAddressReservedRange)
                 {
-                    int endAddress = IntAddress + Driver.ChildAddressReserveRangeCount - 1;
+                    int reservedCount = GetReservedCount();
+
+                    int endAddress = IntAddress + reservedCount;
                     if (endAddress >> 8 != IntAddress >> 8)
                         endAddress = (IntAddress / 256) * 256 + 255;
                     address += " - " + AddressConverter.IntToStringAddress(Driver, endAddress);
@@ -94,6 +110,22 @@ namespace FiresecAPI.Models
                     return PresentationAddress + " - " + Driver.Name;
                 return Driver.Name;
             }
+        }
+
+        public int GetReservedCount()
+        {
+            int reservedCount = Driver.ChildAddressReserveRangeCount;
+            if (Driver.DriverType == DriverType.MRK_30)
+            {
+                reservedCount = 30;
+
+                var reservedCountProperty = Properties.FirstOrDefault(x => x.Name == "MRK30ChildCount");
+                if (reservedCountProperty != null)
+                {
+                    reservedCount = int.Parse(reservedCountProperty.Value);
+                }
+            }
+            return reservedCount;
         }
 
         public void SetAddress(string address)
@@ -167,6 +199,16 @@ namespace FiresecAPI.Models
             }
         }
 
+        public bool CanEditAddress
+        {
+            get
+            {
+                if (Parent != null && Parent.Driver.IsChildAddressReservedRange && Parent.Driver.DriverType != DriverType.MRK_30)
+                    return false;
+                return (Driver.HasAddress && Driver.CanEditAddress);
+            }
+        }
+
         public string PlaceInTree
         {
             get
@@ -189,6 +231,16 @@ namespace FiresecAPI.Models
                 List<Device> allParents = Parent.AllParents;
                 allParents.Add(Parent);
                 return allParents;
+            }
+        }
+
+        public Device Channel
+        {
+            get
+            {
+                return AllParents.FirstOrDefault(x => (x.Driver.DriverType == DriverType.USB_Channel ||
+                    x.Driver.DriverType == DriverType.USB_Channel_1 ||
+                    x.Driver.DriverType == DriverType.USB_Channel_2));
             }
         }
 

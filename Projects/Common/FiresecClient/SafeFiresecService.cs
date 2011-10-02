@@ -47,10 +47,13 @@ namespace FiresecClient
 
         public void StartPing()
         {
-            _pingTimer = new System.Timers.Timer();
-            _pingTimer.Elapsed += new ElapsedEventHandler(OnTimerPing);
-            _pingTimer.Interval = 1000;
-            _pingTimer.Enabled = true;
+            if (_pingTimer != null)
+            {
+                _pingTimer = new System.Timers.Timer();
+                _pingTimer.Elapsed += new ElapsedEventHandler(OnTimerPing);
+                _pingTimer.Interval = 1000;
+                _pingTimer.Enabled = true;
+            }
         }
 
         public void StopPing()
@@ -110,6 +113,18 @@ namespace FiresecClient
             try
             {
                 _iFiresecService.Subscribe();
+            }
+            catch
+            {
+                OnConnectionLost();
+            }
+        }
+
+        public void CancelProgress()
+        {
+            try
+            {
+                _iFiresecService.CancelProgress();
             }
             catch
             {
@@ -192,39 +207,29 @@ namespace FiresecClient
             }
         }
 
-        public void DeviceSetPassword(DeviceConfiguration deviceConfiguration, Guid deviceUID, DevicePasswordType devicePasswordType, string password)
+        public bool DeviceSetPassword(DeviceConfiguration deviceConfiguration, Guid deviceUID, DevicePasswordType devicePasswordType, string password)
         {
             try
             {
-                _iFiresecService.DeviceSetPassword(deviceConfiguration, deviceUID, devicePasswordType, password);
+                return _iFiresecService.DeviceSetPassword(deviceConfiguration, deviceUID, devicePasswordType, password);
             }
             catch
             {
                 OnConnectionLost();
+                return false;
             }
         }
 
-        public void DeviceDatetimeSync(DeviceConfiguration deviceConfiguration, Guid deviceUID)
+        public bool DeviceDatetimeSync(DeviceConfiguration deviceConfiguration, Guid deviceUID)
         {
             try
             {
-                _iFiresecService.DeviceDatetimeSync(deviceConfiguration, deviceUID);
+                return _iFiresecService.DeviceDatetimeSync(deviceConfiguration, deviceUID);
             }
             catch
             {
                 OnConnectionLost();
-            }
-        }
-
-        public void DeviceRestart(DeviceConfiguration deviceConfiguration, Guid deviceUID)
-        {
-            try
-            {
-                _iFiresecService.DeviceRestart(deviceConfiguration, deviceUID);
-            }
-            catch
-            {
-                OnConnectionLost();
+                return false;
             }
         }
 
@@ -621,6 +626,19 @@ namespace FiresecClient
             }
         }
 
+        public string CheckHaspPresence()
+        {
+            try
+            {
+                return _iFiresecService.CheckHaspPresence();
+            }
+            catch
+            {
+                OnConnectionLost();
+                return "Обрыв связи";
+            }
+        }
+
         public List<string> GetFileNamesList(string directory)
         {
             try
@@ -660,6 +678,30 @@ namespace FiresecClient
             return null;
         }
 
+        public void ConvertConfiguration()
+        {
+            try
+            {
+                _iFiresecService.ConvertConfiguration();
+            }
+            catch
+            {
+                OnConnectionLost();
+            }
+        }
+
+        public void ConvertJournal()
+        {
+            try
+            {
+                _iFiresecService.ConvertJournal();
+            }
+            catch
+            {
+                OnConnectionLost();
+            }
+        }
+
         public string Ping()
         {
             try
@@ -693,6 +735,31 @@ namespace FiresecClient
             try
             {
                 return _iFiresecService.Test();
+            }
+            catch
+            {
+                OnConnectionLost();
+            }
+            return null;
+        }
+
+        public void SetXDeviceConfiguration(XFiresecAPI.XDeviceConfiguration xDeviceConfiguration)
+        {
+            try
+            {
+                _iFiresecService.SetXDeviceConfiguration(xDeviceConfiguration);
+            }
+            catch
+            {
+                OnConnectionLost();
+            }
+        }
+
+        public XFiresecAPI.XDeviceConfiguration GetXDeviceConfiguration()
+        {
+            try
+            {
+                return _iFiresecService.GetXDeviceConfiguration();
             }
             catch
             {

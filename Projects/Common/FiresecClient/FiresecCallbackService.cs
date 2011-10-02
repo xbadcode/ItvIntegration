@@ -1,6 +1,5 @@
 ﻿using System;
 using FiresecAPI;
-using System.Diagnostics;
 
 namespace FiresecClient
 {
@@ -16,8 +15,7 @@ namespace FiresecClient
         {
             if (ProgressEvent != null)
                 return ProgressEvent(stage, comment, percentComplete, bytesRW);
-
-            return false;
+            return true;
         }
 
         public static event Action ConfigurationChangedEvent;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using FiresecAPI.Models;
+using XFiresecAPI;
 
 namespace FiresecAPI
 {
@@ -21,6 +22,9 @@ namespace FiresecAPI
         [OperationContract(IsOneWay = true)]
         void Subscribe();
 
+        [OperationContract(IsOneWay = true)]
+        void CancelProgress();
+
         [OperationContract]
         List<Driver> GetDrivers();
 
@@ -37,13 +41,10 @@ namespace FiresecAPI
         void DeviceWriteAllConfiguration(DeviceConfiguration deviceConfiguration);
 
         [OperationContract]
-        void DeviceSetPassword(DeviceConfiguration deviceConfiguration, Guid deviceUID, DevicePasswordType devicePasswordType, string password);
+        bool DeviceSetPassword(DeviceConfiguration deviceConfiguration, Guid deviceUID, DevicePasswordType devicePasswordType, string password);
 
         [OperationContract]
-        void DeviceDatetimeSync(DeviceConfiguration deviceConfiguration, Guid deviceUID);
-
-        [OperationContract]
-        void DeviceRestart(DeviceConfiguration deviceConfiguration, Guid deviceUID);
+        bool DeviceDatetimeSync(DeviceConfiguration deviceConfiguration, Guid deviceUID);
 
         [OperationContract]
         string DeviceGetInformation(DeviceConfiguration deviceConfiguration, Guid deviceUID);
@@ -142,6 +143,9 @@ namespace FiresecAPI
         void ExecuteCommand(Guid deviceUID, string methodName);
 
         [OperationContract]
+        string CheckHaspPresence();
+
+        [OperationContract]
         List<string> GetFileNamesList(string directory);
 
         [OperationContract]
@@ -151,11 +155,23 @@ namespace FiresecAPI
         Stream GetFile(string dirAndFileName);
 
         [OperationContract]
+        void ConvertConfiguration();
+
+        [OperationContract]
+        void ConvertJournal();
+
+        [OperationContract]
         string Ping();
 
         [OperationContract]
         [FaultContract(typeof(FiresecException))]
         string Test();
+
+        [OperationContract]
+        void SetXDeviceConfiguration(XDeviceConfiguration xDeviceConfiguration);
+
+        [OperationContract]
+        XDeviceConfiguration GetXDeviceConfiguration();
     }
 
     public class FiresecException : Exception
