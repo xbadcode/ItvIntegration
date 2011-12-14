@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace FiresecAPI.Models
 {
@@ -34,6 +34,9 @@ namespace FiresecAPI.Models
         [DataMember]
         public List<GuardLevel> GuardLevels { get; set; }
 
+        [DataMember]
+        public string ValidChars { get; set; }
+
         public void Update()
         {
             Devices = new List<Device>();
@@ -55,7 +58,7 @@ namespace FiresecAPI.Models
             }
         }
 
-        public DeviceConfiguration CopyOneBranch(Guid uid)
+        public DeviceConfiguration CopyOneBranch(Guid uid, bool isUsb)
         {
             var deviceConfiguration = new DeviceConfiguration();
 
@@ -72,8 +75,14 @@ namespace FiresecAPI.Models
                     IntAddress = currentDevice.IntAddress,
                     Description = currentDevice.Description,
                     ZoneNo = currentDevice.ZoneNo,
-                    Properties = currentDevice.Properties
+                    Properties = new List<Property>(currentDevice.Properties)
                 };
+                if ((currentDevice.UID == uid) && isUsb)
+                {
+                    if (currentDevice.Properties.Any(x => x.Name == "sys$alt_interface") == false)
+                        currentDevice.Properties.Add(new Property() { Name = "sys$alt_interface", Value = "USB" });
+                }
+
                 if (copyChildDevice != null)
                     copyDevice.Children.Add(copyChildDevice);
 

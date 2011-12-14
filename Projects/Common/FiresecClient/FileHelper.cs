@@ -10,7 +10,7 @@ namespace FiresecClient
     {
         static FileHelper()
         {
-            _directoriesList = new List<string>() { "Sounds", "Icons" };
+            _directoriesList = new List<string>() { "Sounds", "Icons", "ReportTemplates" };
         }
 
         static List<string> _directoriesList;
@@ -24,7 +24,6 @@ namespace FiresecClient
         {
             var remoteFileNamesList = FiresecManager.GetFileNamesList(directory);
             var filesDirectory = Directory.CreateDirectory(CurrentDirectory(directory));
-
             foreach (var localFileName in GetFileNamesList(directory).Where(x => remoteFileNamesList.Contains(x) == false))
                 File.Delete(Path.Combine(filesDirectory.FullName, localFileName));
 
@@ -33,9 +32,7 @@ namespace FiresecClient
             {
                 var fileName = Path.Combine(filesDirectory.FullName, remoteFileHash.Value);
                 if (File.Exists(fileName))
-                {
                     File.Delete(fileName);
-                }
                 DownloadFile(Path.Combine(filesDirectory.Name, remoteFileHash.Value), fileName);
             }
         }
@@ -52,11 +49,7 @@ namespace FiresecClient
         static List<string> GetFileNamesList(string directory)
         {
             if (Directory.Exists(CurrentDirectory(directory)))
-            {
-                return new List<string>(
-                    Directory.EnumerateFiles(CurrentDirectory(directory)).Select(x => Path.GetFileName(x))
-                );
-            }
+                return new List<string>(Directory.EnumerateFiles(CurrentDirectory(directory)).Select(x => Path.GetFileName(x)));
             return new List<string>();
         }
 
@@ -70,14 +63,19 @@ namespace FiresecClient
             get { return GetFileNamesList(_directoriesList[0]); }
         }
 
+        public static string GetSoundFilePath(string fileName)
+        {
+            return string.IsNullOrWhiteSpace(fileName) ? null : Path.Combine(CurrentDirectory(_directoriesList[0]), fileName);
+        }
+
         public static string GetIconFilePath(string fileName)
         {
             return string.IsNullOrWhiteSpace(fileName) ? null : Path.Combine(CurrentDirectory(_directoriesList[1]), fileName);
         }
 
-        public static string GetSoundFilePath(string fileName)
+        public static string GetReportFilePath(string fileName)
         {
-            return string.IsNullOrWhiteSpace(fileName) ? null : Path.Combine(CurrentDirectory(_directoriesList[0]), fileName);
+            return string.IsNullOrWhiteSpace(fileName) ? null : Path.Combine(CurrentDirectory(_directoriesList[2]), fileName);
         }
     }
 }

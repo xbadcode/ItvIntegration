@@ -47,6 +47,7 @@ namespace FiresecClient
 
         public void StartPing()
         {
+            return;
             _pingTimer = new System.Timers.Timer();
             _pingTimer.Elapsed += new ElapsedEventHandler(OnTimerPing);
             _pingTimer.Interval = 1000;
@@ -67,7 +68,7 @@ namespace FiresecClient
             Ping();
         }
 
-        public bool? Connect(string userName, string password)
+        public string Connect(string userName, string password)
         {
             try
             {
@@ -77,10 +78,10 @@ namespace FiresecClient
             {
                 OnConnectionLost();
             }
-            return null;
+            return "Не удается соединиться с сервером";
         }
 
-        public bool? Reconnect(string userName, string password)
+        public string Reconnect(string userName, string password)
         {
             try
             {
@@ -90,7 +91,7 @@ namespace FiresecClient
             {
                 OnConnectionLost();
             }
-            return null;
+            return "Не удается соединиться с сервером";
         }
 
         public void Disconnect()

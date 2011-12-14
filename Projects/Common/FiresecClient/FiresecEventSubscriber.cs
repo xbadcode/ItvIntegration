@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using FiresecAPI;
 using FiresecAPI.Models;
-using System.Collections.Generic;
 
 namespace FiresecClient
 {
-    [CallbackBehavior(ConcurrencyMode=ConcurrencyMode.Single)]
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Single)]
     public class FiresecEventSubscriber : IFiresecCallback
     {
         public void Progress(int stage, string comment, int percentComplete, int bytesRW)
@@ -57,7 +57,28 @@ namespace FiresecClient
         {
             var zoneState = FiresecManager.DeviceStates.ZoneStates.FirstOrDefault(x => x.No == newZoneState.No);
             zoneState.StateType = newZoneState.StateType;
+            zoneState.RevertColorsForGuardZone = IsZoneOnGuard(newZoneState);
             OnZoneStateChanged(zoneState.No);
+        }
+
+        public bool IsZoneOnGuard(ZoneState zoneState)
+        {
+            var zone = FiresecManager.DeviceConfiguration.Zones.FirstOrDefault(x => x.No == zoneState.No);
+            if (zone.ZoneType == ZoneType.Guard)
+            {
+                foreach (var deviceState in FiresecManager.DeviceStates.DeviceStates)
+                {
+                    if (deviceState.Device.ZoneNo.HasValue)
+                    {
+                        if (deviceState.Device.ZoneNo.Value == zone.No.Value)
+                        {
+                            if (deviceState.States.Any(x => x.Code == "OnGuard") == false)
+                                return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         public void NewJournalRecord(JournalRecord journalRecord)
@@ -99,8 +120,8 @@ namespace FiresecClient
                 DeviceParametersChangedEvent(deviceUID);
         }
 
-        public static event Action<string> ZoneStateChangedEvent;
-        public static void OnZoneStateChanged(string zoneNo)
+        public static event Action<ulong?> ZoneStateChangedEvent;
+        public static void OnZoneStateChanged(ulong? zoneNo)
         {
             if (ZoneStateChangedEvent != null)
                 ZoneStateChangedEvent(zoneNo);

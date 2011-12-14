@@ -8,21 +8,14 @@ namespace FiresecAPI.Models
     {
         public GuardUser()
         {
-            Zones = new List<string>();
-            GuardLevelNames = new List<string>();
+            LevelNames = new List<string>();
         }
 
         [DataMember]
         public int Id { get; set; }
 
         [DataMember]
-        public string Gid { get; set; }
-
-        [DataMember]
         public string Name { get; set; }
-
-        [DataMember]
-        public List<string> Zones { get; set; }
 
         [DataMember]
         public bool CanSetZone { get; set; }
@@ -46,6 +39,6 @@ namespace FiresecAPI.Models
         public string KeyTM { get; set; }
 
         [DataMember]
-        public List<string> GuardLevelNames { get; set; }
+        public List<string> LevelNames { get; set; }
     }
 }

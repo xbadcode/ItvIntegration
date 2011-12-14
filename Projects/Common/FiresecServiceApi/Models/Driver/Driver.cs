@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System;
 
 namespace FiresecAPI.Models
 {
@@ -84,6 +84,12 @@ namespace FiresecAPI.Models
         public List<Guid> AutoCreateChildren { get; set; }
 
         [DataMember]
+        public Guid AutoChild { get; set; }
+
+        [DataMember]
+        public int AutoChildCount { get; set; }
+
+        [DataMember]
         public bool IsRangeEnabled { get; set; }
 
         [DataMember]
@@ -123,7 +129,16 @@ namespace FiresecAPI.Models
         public bool IsPlaceable { get; set; }
 
         [DataMember]
+        public bool IsSingleInParent { get; set; }
+
+        [DataMember]
+        public bool IsSingleInZone { get; set; }
+
+        [DataMember]
         public bool IsIndicatorDevice { get; set; }
+
+        [DataMember]
+        public bool IsNotValidateZoneAndChildren { get; set; }
 
         [DataMember]
         public bool CanControl { get; set; }
@@ -162,6 +177,9 @@ namespace FiresecAPI.Models
         public bool CanReadDatabase { get; set; }
 
         [DataMember]
+        public bool CanReadJournal { get; set; }
+
+        [DataMember]
         public bool CanAutoDetect { get; set; }
 
         [DataMember]
@@ -184,5 +202,8 @@ namespace FiresecAPI.Models
 
         [DataMember]
         public bool IsAlternativeUSB { get; set; }
+
+        [DataMember]
+        public bool CanMonitoringDisable { get; set; }
     }
 }

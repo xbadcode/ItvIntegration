@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System;
 
 namespace FiresecAPI.Models
 {
@@ -9,7 +9,7 @@ namespace FiresecAPI.Models
     {
         public Clause()
         {
-            Zones = new List<string>();
+            Zones = new List<ulong?>();
             Operation = ZoneLogicOperation.Any;
         }
 
@@ -19,10 +19,10 @@ namespace FiresecAPI.Models
         public ZoneLogicState State { get; set; }
 
         [DataMember]
-        public ZoneLogicOperation Operation { get; set; }
+        public ZoneLogicOperation? Operation { get; set; }
 
         [DataMember]
-        public List<string> Zones { get; set; }
+        public List<ulong?> Zones { get; set; }
 
         [DataMember]
         public Guid DeviceUID { get; set; }

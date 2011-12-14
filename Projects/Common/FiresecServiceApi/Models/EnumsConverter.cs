@@ -148,10 +148,10 @@
                     return "охранный";
 
                 case DeviceType.Technoligical:
-                    return "";
+                    return "технологический";
 
                 default:
-                    return "технологический";
+                    return "";
             }
         }
 
@@ -428,6 +428,24 @@
 
                 case PermissionType.Oper_ShowPlans:
                     return "ОЗ: Управление показом планов";
+
+                default:
+                    return "";
+            }
+        }
+
+        public static string RemoteAccessTypeToString(RemoteAccessType remoteAccessType)
+        {
+            switch (remoteAccessType)
+            {
+                case RemoteAccessType.RemoteAccessBanned:
+                    return "Запрещен";
+
+                case RemoteAccessType.RemoteAccessAllowed:
+                    return "Резрешен с любых компьютеров";
+
+                case RemoteAccessType.SelectivelyAllowed:
+                    return "Разрешен только с указанных компьютеров";
 
                 default:
                     return "";

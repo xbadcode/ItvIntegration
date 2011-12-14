@@ -1,5 +1,5 @@
-﻿using System.Runtime.Serialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace FiresecAPI.Models
 {
@@ -10,7 +10,7 @@ namespace FiresecAPI.Models
         {
             ZoneType = ZoneType.Fire;
             GuardZoneType = GuardZoneType.Ordinary;
-            DetectorCount = "2";
+            DetectorCount = 2;
             EvacuationTime = "0";
             AutoSet = "0";
             Delay = "0";
@@ -20,7 +20,7 @@ namespace FiresecAPI.Models
         public List<string> ShapeIds { get; set; }
 
         [DataMember]
-        public string No { get; set; }
+        public ulong? No { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -32,7 +32,7 @@ namespace FiresecAPI.Models
         public ZoneType ZoneType { get; set; }
 
         [DataMember]
-        public string DetectorCount { get; set; }
+        public int DetectorCount { get; set; }
 
         [DataMember]
         public string EvacuationTime { get; set; }

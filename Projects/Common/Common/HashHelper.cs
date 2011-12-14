@@ -23,9 +23,7 @@ namespace Common
                     {
                         hash += fileInfo.Name;
                         if (hashTable.ContainsKey(hash) == false)
-                        {
                             hashTable.Add(hash, fileInfo.Name);
-                        }
                     }
                 }
             }
@@ -55,6 +53,7 @@ namespace Common
         {
             var mD5CryptoServiceProvider = new MD5CryptoServiceProvider();
             var hash = new StringBuilder();
+
             foreach (byte passByte in mD5CryptoServiceProvider.ComputeHash(Encoding.UTF8.GetBytes(str)))
             {
                 hash.Append(passByte.ToString("x2"));
@@ -70,6 +69,7 @@ namespace Common
 
             var mD5CryptoServiceProvider = new MD5CryptoServiceProvider();
             var hash = new StringBuilder();
+
             using (var fileStream = fileInfo.Open(FileMode.Open))
             {
                 foreach (byte passByte in mD5CryptoServiceProvider.ComputeHash(fileStream))

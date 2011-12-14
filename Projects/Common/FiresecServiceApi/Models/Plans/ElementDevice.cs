@@ -1,27 +1,37 @@
-﻿using System.Runtime.Serialization;
-using System;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Windows;
 
 namespace FiresecAPI.Models
 {
     [DataContract]
-    public class ElementDevice
+    public class ElementDevice : ElementBase
     {
-        [DataMember]
-        public int idElementCanvas;
+        public ElementDevice()
+        {
+            Width = 20;
+            Height = 20;
+            DeviceUID = Guid.Empty;
+        }
+
+        public Device Device { get; set; }
 
         [DataMember]
-        public double Left { get; set; }
+        public Guid DeviceUID { get; set; }
 
-        [DataMember]
-        public double Top { get; set; }
+        public override FrameworkElement Draw()
+        {
+            return null;
+        }
 
-        [DataMember]
-        public double Width { get; set; }
-
-        [DataMember]
-        public double Height { get; set; }
-
-        [DataMember]
-        public Guid Id { get; set; }
+        public override ElementBase Clone()
+        {
+            ElementBase elementBase = new ElementDevice()
+            {
+                DeviceUID = DeviceUID
+            };
+            Copy(elementBase);
+            return elementBase;
+        }
     }
 }

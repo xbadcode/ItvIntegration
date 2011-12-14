@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
-using FiresecAPI.Models.Plans;
+using System.Windows.Media;
 
 namespace FiresecAPI.Models
 {
@@ -9,21 +10,36 @@ namespace FiresecAPI.Models
     {
         public Plan()
         {
+            UID = Guid.NewGuid();
             Children = new List<Plan>();
             ElementSubPlans = new List<ElementSubPlan>();
-            ElementZones = new List<ElementZone>();
+            Caption = "Новый план";
+            Width = 0;
+            Height = 0;
+            BackgroundColor = Colors.LightGreen;
+            ClearElements();
+        }
+
+        public void ClearElements()
+        {
+            ElementSubPlans = new List<ElementSubPlan>();
+            ElementRectangleZones = new List<ElementRectangleZone>();
+            ElementPolygonZones = new List<ElementPolygonZone>();
             ElementDevices = new List<ElementDevice>();
-            Rectangls = new List<RectangleBox>();
-            TextBoxes = new List<CaptionBox>();
+
+            ElementRectangles = new List<ElementRectangle>();
+            ElementEllipses = new List<ElementEllipse>();
+            ElementTextBlocks = new List<ElementTextBlock>();
+            ElementPolygons = new List<ElementPolygon>();
         }
 
         public Plan Parent { get; set; }
 
         [DataMember]
-        public List<Plan> Children { get; set; }
+        public Guid UID { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public List<Plan> Children { get; set; }
 
         [DataMember]
         public string Caption { get; set; }
@@ -32,33 +48,41 @@ namespace FiresecAPI.Models
         public string Description { get; set; }
 
         [DataMember]
-        public string BackgroundSource { get; set; }
-
-        [DataMember]
-        public bool ShowBackgroundImage { get; set; }
-
-        [DataMember]
-        public byte[] BackgroundPixels { get; set; }
-
-        [DataMember]
         public double Width { get; set; }
 
         [DataMember]
         public double Height { get; set; }
 
         [DataMember]
+        public Color BackgroundColor { get; set; }
+
+        [DataMember]
+        public byte[] BackgroundPixels { get; set; }
+
+
+        [DataMember]
         public List<ElementSubPlan> ElementSubPlans { get; set; }
 
         [DataMember]
-        public List<ElementZone> ElementZones { get; set; }
+        public List<ElementRectangleZone> ElementRectangleZones { get; set; }
 
         [DataMember]
-        public List<RectangleBox> Rectangls { get; set; }
-
-        [DataMember]
-        public List<CaptionBox> TextBoxes { get; set; }
+        public List<ElementPolygonZone> ElementPolygonZones { get; set; }
 
         [DataMember]
         public List<ElementDevice> ElementDevices { get; set; }
+
+
+        [DataMember]
+        public List<ElementRectangle> ElementRectangles { get; set; }
+
+        [DataMember]
+        public List<ElementEllipse> ElementEllipses { get; set; }
+
+        [DataMember]
+        public List<ElementTextBlock> ElementTextBlocks { get; set; }
+
+        [DataMember]
+        public List<ElementPolygon> ElementPolygons { get; set; }
     }
 }
