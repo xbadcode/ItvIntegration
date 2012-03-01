@@ -14,7 +14,6 @@ namespace FiresecAPI.Models
             Zones = new List<Zone>();
             Directions = new List<Direction>();
             GuardUsers = new List<GuardUser>();
-            GuardLevels = new List<GuardLevel>();
         }
 
         public List<Device> Devices { get; set; }
@@ -31,8 +30,6 @@ namespace FiresecAPI.Models
         [DataMember]
         public List<GuardUser> GuardUsers { get; set; }
 
-        [DataMember]
-        public List<GuardLevel> GuardLevels { get; set; }
 
         [DataMember]
         public string ValidChars { get; set; }
@@ -55,6 +52,29 @@ namespace FiresecAPI.Models
                 device.Parent = parentDevice;
                 Devices.Add(device);
                 AddChild(device);
+            }
+        }
+
+        public void UpdateGuardConfiguration()
+        {
+            foreach (var guardUser in GuardUsers)
+            {
+                var device = Devices.FirstOrDefault(x => x.UID == guardUser.DeviceUID);
+                if (device == null)
+                {
+                    guardUser.DeviceUID = Guid.Empty;
+                }
+                else
+                {
+                    var userZones = new List<ulong>();
+                    foreach (var zoneNo in guardUser.Zones)
+                    {
+                        var zone = Zones.FirstOrDefault(x => x.No == zoneNo);
+                        if (zone != null)
+                            userZones.Add(zoneNo);
+                    }
+                    guardUser.Zones = userZones;
+                }
             }
         }
 

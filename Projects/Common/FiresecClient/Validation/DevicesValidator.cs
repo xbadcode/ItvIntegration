@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
 using FiresecAPI.Models;
 
 namespace FiresecClient.Validation
@@ -21,16 +20,11 @@ namespace FiresecClient.Validation
 
         public static void Validate()
         {
-            Action deviceValidator = new Action(ValidateDevices);
-            IAsyncResult deviceValidationResult = deviceValidator.BeginInvoke(null, null);
-
-            Action zoneValidator = new Action(ValidateZones);
-            IAsyncResult zoneValidationResult = zoneValidator.BeginInvoke(null, null);
-
+            FiresecManager.DeviceConfiguration.UpdateGuardConfiguration();
+            ValidateDevices();
+            ValidateZones();
             ValidateDirections();
-
-            zoneValidator.EndInvoke(zoneValidationResult);
-            deviceValidator.EndInvoke(deviceValidationResult);
+            ValidateGuardUsers();
         }
 
         static void ValidateDevices()
@@ -41,11 +35,6 @@ namespace FiresecClient.Validation
 
             foreach (var device in FiresecManager.DeviceConfiguration.Devices)
             {
-                //if (device.DriverUID == new Guid("96CDBD7E-29F6-45D4-9028-CF10332FAB1A"))
-                //{
-                //    ++pduCount;
-                //    --pduCount;
-                //}
                 if (device.Driver.DriverType == PduDriverType)
                 {
                     ++pduCount;
@@ -151,7 +140,8 @@ namespace FiresecClient.Validation
 
         static void ValidateDeviceExtendedZoneLogic(Device device)
         {
-            if (device.Driver.IsZoneLogicDevice && device.ZoneLogic == null)
+            if (device.Driver.IsZoneLogicDevice && device.ZoneLogic == null &&
+                device.Driver.DriverType != DriverType.ASPT && device.Driver.DriverType != DriverType.Exit)
                 DeviceErrors.Add(new DeviceError(device, "Отсутствуют настроенные режимы срабатывания", ErrorLevel.CannotWrite));
         }
 
@@ -377,7 +367,7 @@ namespace FiresecClient.Validation
 
         static void ValidateZoneDetectorCount(Zone zone, List<Device> zoneDevices)
         {
-            if (zone.DetectorCount > zoneDevices.Where(x => x.Driver.IsZoneDevice).Count())
+            if ((zone.ZoneType == ZoneType.Fire) && (zone.DetectorCount > zoneDevices.Where(x => x.Driver.IsZoneDevice).Count()))
                 ZoneErrors.Add(new ZoneError(zone, "Количество подключенных к зоне датчиков меньше количества датчиков для сработки", ErrorLevel.Warning));
         }
 
@@ -503,6 +493,54 @@ namespace FiresecClient.Validation
                 {
                     if (device.ZoneLogic.Clauses.Any(x => x.Zones.Contains(zoneNo)))
                         yield return device;
+                }
+            }
+        }
+
+        static void ValidateGuardUsers()
+        {
+            var missingPasswordUsers = new List<GuardUser>();
+
+            foreach (var device in FiresecManager.DeviceConfiguration.Devices)
+            {
+                if ((device.Driver.DriverType == DriverType.USB_Rubezh_2OP) || (device.Driver.DriverType == DriverType.Rubezh_2OP))
+                {
+                    var devicePlusPasswords = new List<string>();
+
+                    var deviceZones = new List<ulong>();
+                    foreach (var childDevice in device.Children)
+                    {
+                        if (childDevice.Driver.DriverType == DriverType.AM1_O)
+                            if (childDevice.ZoneNo.HasValue)
+                                deviceZones.Add(childDevice.ZoneNo.Value);
+                    }
+
+                    foreach (var guardUser in FiresecManager.DeviceConfiguration.GuardUsers)
+                    {
+                        if ((guardUser.DeviceUID == device.UID) || guardUser.Zones.Any(x => deviceZones.Contains(x)))
+                        {
+                            if (string.IsNullOrEmpty(guardUser.Password))
+                            {
+                                if (missingPasswordUsers.Contains(guardUser) == false)
+                                {
+                                    DeviceErrors.Add(new DeviceError(device, "Отсутствует информация у пользователя(Отсутствует пароль у пользователя\"" + guardUser.Name + "\")", ErrorLevel.CannotWrite));
+                                    missingPasswordUsers.Add(guardUser);
+                                }
+                            }
+                            else
+                            {
+                                var devicePlusPassword = device.UID.ToString() + guardUser.Password;
+                                if (devicePlusPasswords.Contains(devicePlusPassword))
+                                {
+                                    DeviceErrors.Add(new DeviceError(device, "Нарушена уникальность пользователей прибора(Совпадение пароля у пользователя\"" + guardUser.Name + "\")", ErrorLevel.CannotWrite));
+                                }
+                                else
+                                {
+                                    devicePlusPasswords.Add(devicePlusPassword);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

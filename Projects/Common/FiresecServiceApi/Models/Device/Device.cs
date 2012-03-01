@@ -16,7 +16,7 @@ namespace FiresecAPI.Models
             Properties = new List<Property>();
             IndicatorLogic = new IndicatorLogic();
             PDUGroupLogic = new PDUGroupLogic();
-            PlanUIDs = new List<Guid>();
+            PlanElementUIDs = new List<Guid>();
         }
 
         public Driver Driver { get; set; }
@@ -60,7 +60,7 @@ namespace FiresecAPI.Models
         public bool IsRmAlarmDevice { get; set; }
 
         [DataMember]
-        public List<Guid> PlanUIDs { get; set; }
+        public List<Guid> PlanElementUIDs { get; set; }
 
         [DataMember]
         public bool IsMonitoringDisabled { get; set; }
@@ -76,8 +76,8 @@ namespace FiresecAPI.Models
 
                 if (Driver.IsChildAddressReservedRange)
                 {
-                    int endAddress = IntAddress + Driver.ChildAddressReserveRangeCount;
-                    if (endAddress >> 8 != IntAddress >> 8) //endAddress / 256 == endAddress >> 8
+                    int endAddress = IntAddress + Driver.ChildAddressReserveRangeCount - 1;
+                    if (endAddress >> 8 != IntAddress >> 8)
                         endAddress = (IntAddress / 256) * 256 + 255;
                     address += " - " + AddressConverter.IntToStringAddress(Driver, endAddress);
                 }
@@ -99,6 +99,13 @@ namespace FiresecAPI.Models
         public void SetAddress(string address)
         {
             IntAddress = AddressConverter.StringToIntAddress(Driver, address);
+            if (Driver.IsChildAddressReservedRange)
+            {
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    Children[i].IntAddress = IntAddress + i;
+                }
+            }
         }
 
         public string AddressFullPath
@@ -141,6 +148,9 @@ namespace FiresecAPI.Models
                 var address = new StringBuilder();
                 foreach (var parentDevice in AllParents.Where(x => x.Driver.HasAddress))
                 {
+                    if (parentDevice.Driver.IsChildAddressReservedRange)
+                        continue;
+
                     address.Append(parentDevice.PresentationAddress);
                     address.Append(".");
                 }
@@ -204,6 +214,7 @@ namespace FiresecAPI.Models
         {
             var newDevice = new Device()
             {
+                DriverUID = DriverUID,
                 Driver = Driver,
                 IntAddress = IntAddress,
                 Description = Description,
@@ -213,7 +224,7 @@ namespace FiresecAPI.Models
             if (fullCopy)
             {
                 newDevice.UID = UID;
-                //newDevice.DatabaseId = DatabaseId;
+                newDevice.DatabaseId = DatabaseId;
             }
 
             if (ZoneLogic != null)

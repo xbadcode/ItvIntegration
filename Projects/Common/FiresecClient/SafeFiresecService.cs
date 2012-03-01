@@ -47,7 +47,6 @@ namespace FiresecClient
 
         public void StartPing()
         {
-            return;
             _pingTimer = new System.Timers.Timer();
             _pingTimer.Elapsed += new ElapsedEventHandler(OnTimerPing);
             _pingTimer.Interval = 1000;
@@ -68,11 +67,11 @@ namespace FiresecClient
             Ping();
         }
 
-        public string Connect(string userName, string password)
+        public string Connect(string clientCallbackAddress, string userName, string password)
         {
             try
             {
-                return _iFiresecService.Connect(userName, password);
+                return _iFiresecService.Connect(clientCallbackAddress, userName, password);
             }
             catch
             {
@@ -325,6 +324,45 @@ namespace FiresecClient
             try
             {
                 return _iFiresecService.DeviceCustomFunctionExecute(deviceConfiguration, deviceUID, functionName);
+            }
+            catch
+            {
+                OnConnectionLost();
+                return null;
+            }
+        }
+
+        public string DeviceGetGuardUsersList(DeviceConfiguration deviceConfiguration, Guid deviceUID)
+        {
+            try
+            {
+                return _iFiresecService.DeviceGetGuardUsersList(deviceConfiguration, deviceUID);
+            }
+            catch
+            {
+                OnConnectionLost();
+                return null;
+            }
+        }
+
+        public string DeviceSetGuardUsersList(DeviceConfiguration deviceConfiguration, Guid deviceUID, string users)
+        {
+            try
+            {
+                return _iFiresecService.DeviceSetGuardUsersList(deviceConfiguration, deviceUID, users);
+            }
+            catch
+            {
+                OnConnectionLost();
+                return null;
+            }
+        }
+
+        public string DeviceGetMDS5Data(DeviceConfiguration deviceConfiguration, Guid deviceUID)
+        {
+            try
+            {
+                return _iFiresecService.DeviceGetMDS5Data(deviceConfiguration, deviceUID);
             }
             catch
             {
@@ -661,19 +699,6 @@ namespace FiresecClient
                 OnConnectionLost();
             }
             return null;
-        }
-
-        public void StopProgress()
-        {
-            try
-            {
-                _iFiresecService.StopProgress();
-            }
-            catch
-            {
-                OnConnectionLost();
-            }
-            return;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using FiresecAPI.Models;
+using System.ServiceModel;
 
 namespace FiresecClient
 {
@@ -19,11 +20,13 @@ namespace FiresecClient
 
         static public SafeFiresecService FiresecService { get; private set; }
 
-        public static string Connect(string serverAddress, string login, string password)
+        public static string Connect(string clientCallbackAddress, string serverAddress, string login, string password)
         {
+            FiresecCallbackServiceManager.Open(clientCallbackAddress);
+
             FiresecService = new SafeFiresecService(FiresecServiceFactory.Create(serverAddress));
 
-            string result = FiresecService.Connect(login, password);
+            string result = FiresecService.Connect(clientCallbackAddress, login, password);
             if (result != null)
             {
                 return result;
@@ -33,10 +36,10 @@ namespace FiresecClient
             return null;
         }
 
-        public static void SelectiveFetch()
+        public static void SelectiveFetch(bool updateFiles = true)
         {
-            Action synchronizer = new Action(FileHelper.Synchronize);
-            IAsyncResult result = synchronizer.BeginInvoke(null, null);
+            if (updateFiles)
+                FileHelper.Synchronize();
 
             SystemConfiguration = FiresecService.GetSystemConfiguration();
             LibraryConfiguration = FiresecService.GetLibraryConfiguration();
@@ -53,8 +56,21 @@ namespace FiresecClient
 
             FiresecService.Subscribe();
             FiresecService.StartPing();
+        }
 
-            synchronizer.EndInvoke(result);
+        public static void ActiveXFetch()
+        {
+            Drivers = FiresecService.GetDrivers();
+            LibraryConfiguration = FiresecService.GetLibraryConfiguration();
+            DeviceConfiguration = FiresecService.GetDeviceConfiguration();
+            DeviceStates = FiresecService.GetStates();
+
+            //UpdateDrivers();
+            UpdateActiveXConfiguration();
+            UpdateStates();
+
+            FiresecService.Subscribe();
+            FiresecService.StartPing();
         }
 
         public static string Reconnect(string login, string password)
@@ -72,6 +88,26 @@ namespace FiresecClient
         public static void UpdateDrivers()
         {
             Drivers.ForEach(x => x.ImageSource = FileHelper.GetIconFilePath(x.ImageSource) + ".ico");
+        }
+
+        public static void UpdateActiveXConfiguration()
+        {
+            DeviceConfiguration.Update();
+
+            foreach (var device in DeviceConfiguration.Devices)
+            {
+                device.Driver = FiresecManager.Drivers.FirstOrDefault(x => x.UID == device.DriverUID);
+                if (device.Driver.IsIndicatorDevice || device.IndicatorLogic != null)
+                    device.IndicatorLogic.Device = DeviceConfiguration.Devices.FirstOrDefault(x => x.UID == device.IndicatorLogic.DeviceUID);
+
+                if (device.Driver.IsZoneLogicDevice && device.ZoneLogic != null)
+                {
+                    foreach (var clause in device.ZoneLogic.Clauses.Where(x => x.DeviceUID != Guid.Empty))
+                    {
+                        clause.Device = DeviceConfiguration.Devices.FirstOrDefault(x => x.UID == clause.DeviceUID);
+                    }
+                }
+            }
         }
 
         public static void UpdateConfiguration()
@@ -97,7 +133,7 @@ namespace FiresecClient
 
         public static void UpdatePlansConfiguration()
         {
-            FiresecManager.DeviceConfiguration.Devices.ForEach(x => { x.PlanUIDs.Clear(); });
+            FiresecManager.DeviceConfiguration.Devices.ForEach(x => { x.PlanElementUIDs = new List<Guid>(); });
 
             foreach (var plan in FiresecManager.PlansConfiguration.AllPlans)
             {
@@ -108,7 +144,7 @@ namespace FiresecClient
                     var device = FiresecManager.DeviceConfiguration.Devices.FirstOrDefault(x => x.UID == elementDevice.DeviceUID);
                     if (device != null)
                     {
-                        device.PlanUIDs.Add(elementDevice.UID);
+                        device.PlanElementUIDs.Add(elementDevice.UID);
                         elementDevice.Device = device;
                     }
                     else
@@ -150,7 +186,8 @@ namespace FiresecClient
             foreach (var deviceState in DeviceStates.DeviceStates)
             {
                 deviceState.Device = FiresecManager.DeviceConfiguration.Devices.FirstOrDefault(x => x.UID == deviceState.UID);
-                if (deviceState.Device == null) continue;
+                if (deviceState.Device == null)
+                    continue;
 
                 foreach (var state in deviceState.States)
                 {
@@ -174,22 +211,13 @@ namespace FiresecClient
 
         public static void Disconnect()
         {
-            return;
             if (FiresecService != null)
             {
                 FiresecService.StopPing();
                 FiresecService.Disconnect();
             }
             FiresecServiceFactory.Dispose();
-        }
-
-        public static void SetConfiguration()
-        {
-            FiresecService.SetSystemConfiguration(SystemConfiguration);
-            FiresecService.SetSecurityConfiguration(SecurityConfiguration);
-            FiresecService.SetLibraryConfiguration(LibraryConfiguration);
-            FiresecService.SetDeviceConfiguration(DeviceConfiguration);
-            FiresecService.SetPlansConfiguration(PlansConfiguration);
+            FiresecCallbackServiceManager.Close();
         }
 
         public static void AddToIgnoreList(List<Guid> deviceUIDs)
@@ -327,34 +355,24 @@ namespace FiresecClient
             return FiresecService.DeviceCustomFunctionExecute(DeviceConfiguration.CopyOneBranch(deviceUID, false), deviceUID, functionName);
         }
 
-        public static void LoadFromFile(string fileName)
+        public static string DeviceGetGuardUsersList(Guid deviceUID)
         {
-            var dataContractSerializer = new DataContractSerializer(typeof(DeviceConfiguration));
-            using (var fileStream = new FileStream(fileName, FileMode.Open))
-            {
-                FiresecManager.DeviceConfiguration = (DeviceConfiguration) dataContractSerializer.ReadObject(fileStream);
-            }
-
-            UpdateConfiguration();
+            return FiresecService.DeviceGetGuardUsersList(DeviceConfiguration.CopyOneBranch(deviceUID, false), deviceUID);
         }
 
-        public static void SaveToFile(string fileName)
+        public static string DeviceSetGuardUsersList(Guid deviceUID, string users)
         {
-            var dataContractSerializer = new DataContractSerializer(typeof(DeviceConfiguration));
-            using (var fileStream = new FileStream(fileName, FileMode.Create))
-            {
-                dataContractSerializer.WriteObject(fileStream, FiresecManager.DeviceConfiguration);
-            }
+            return FiresecService.DeviceSetGuardUsersList(DeviceConfiguration.CopyOneBranch(deviceUID, false), deviceUID, users);
+        }
+
+        public static string DeviceGetMDS5Data(Guid deviceUID)
+        {
+            return FiresecService.DeviceGetMDS5Data(DeviceConfiguration.CopyOneBranch(deviceUID, false), deviceUID);
         }
 
         public static void Test()
         {
             FiresecService.Test();
-        }
-
-        public static void StopProgress()
-        {
-            FiresecService.StopProgress();
         }
     }
 }

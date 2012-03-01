@@ -16,6 +16,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -106,6 +107,12 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>StrongNameKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -127,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddressConverter.cs" />
+    <Compile Include="CallbackService\IFiresecCallbackService.cs" />
     <Compile Include="IFiresecCallback.cs" />
     <Compile Include="IFiresecService.cs" />
     <Compile Include="Models\Configuration\FullConfiguration.cs" />
@@ -142,10 +150,14 @@
     <Compile Include="Models\Driver\DriverPropertyParameter.cs" />
     <Compile Include="Models\Driver\DriverPropertyTypeEnum.cs" />
     <Compile Include="Models\Driver\DriverType.cs" />
+    <Compile Include="Models\EnumsConverter.cs" />
+    <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\Library\LibraryDevice.cs" />
     <Compile Include="Models\Library\LibraryFrame.cs" />
     <Compile Include="Models\Library\LibraryState.cs" />
+    <Compile Include="Models\Plans\ElementBasePointCollection.cs" />
     <Compile Include="Models\Plans\ElementBasePolygon.cs" />
+    <Compile Include="Models\Plans\ElementPolyline.cs" />
     <Compile Include="Models\Plans\ElementPolygon.cs" />
     <Compile Include="Models\Plans\ElementPolygonZone.cs" />
     <Compile Include="Models\Plans\ElementRectangleZone.cs" />
@@ -157,23 +169,25 @@
     <Compile Include="Models\Plans\IZIndexedElement.cs" />
     <Compile Include="Models\Plans\PlanElementsHelper.cs" />
     <Compile Include="Models\Plans\ElementRectangle.cs" />
+    <Compile Include="Models\Reports\ReportType.cs" />
+    <Compile Include="Models\Security\PermissionType.cs" />
+    <Compile Include="Models\Security\RemoteAccessType.cs" />
     <Compile Include="Models\Security\UserRole.cs" />
-    <Compile Include="Models\System\ArchiveFilter.cs" />
     <Compile Include="Models\System\ArchiveDefaultState.cs" />
+    <Compile Include="Models\System\ArchiveDefaultStateType.cs" />
+    <Compile Include="Models\System\ArchiveFilter.cs" />
     <Compile Include="Models\System\BeeperType.cs" />
     <Compile Include="Models\System\InstructionType.cs" />
     <Compile Include="Models\Security\RemoteAccess.cs" />
+    <Compile Include="Models\System\SubsystemType.cs" />
     <Compile Include="Models\Zone\Clause.cs" />
     <Compile Include="Models\Zone\GuardZoneType.cs" />
     <Compile Include="Models\Zone\ZoneLogicJoinOperator.cs" />
     <Compile Include="Models\Zone\ZoneLogicOperation.cs" />
     <Compile Include="Models\Zone\ZoneLogicState.cs" />
     <Compile Include="Models\Zone\ZoneType.cs" />
-    <Compile Include="Models\EnumsConverter.cs" />
-    <Compile Include="Models\Guard\GuardLevel.cs" />
     <Compile Include="Models\Guard\GuardUser.cs" />
     <Compile Include="Models\Guard\ZoneActionType.cs" />
-    <Compile Include="Models\Guard\ZoneLevel.cs" />
     <Compile Include="Models\Plans\ElementDevice.cs" />
     <Compile Include="Models\Plans\ElementSubPlan.cs" />
     <Compile Include="Models\Plans\Plan.cs" />
@@ -187,7 +201,7 @@
     <Compile Include="Models\Configuration\SystemConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\AlarmType.cs" />
+    <Compile Include="Models\System\AlarmType.cs" />
     <Compile Include="Models\Configuration\DeviceConfiguration.cs" />
     <Compile Include="Models\Configuration\DeviceConfigurationStates.cs" />
     <Compile Include="Models\Device\Device.cs" />
@@ -229,14 +243,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="StrongNameKey.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\FiresecService\Firesec\Firesec.csproj">
-      <Project>{D8D5BB16-DAA5-4755-A924-34AC8DCE19E8}</Project>
-      <Name>Firesec</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -245,4 +253,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>if /I "$(ConfigurationName)" == "Release" Eazfuscator.NET.exe "$(TargetPath)" --msbuild-project-path "$(ProjectPath)" --msbuild-project-configuration "$(ConfigurationName)" --msbuild-project-platform "$(PlatformName)" --msbuild-solution-path "$(SolutionPath)" -n --newline-flush -v 3.2</PostBuildEvent>
+  </PropertyGroup>
 </Project>

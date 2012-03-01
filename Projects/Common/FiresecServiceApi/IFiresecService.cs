@@ -10,12 +10,12 @@ namespace FiresecAPI
     public interface IFiresecService
     {
         [OperationContract(IsInitiating = true)]
-        string Connect(string userName, string password);
+        string Connect(string clientCallbackAddress, string userName, string password);
 
         [OperationContract]
         string Reconnect(string userName, string password);
 
-        [OperationContract(IsTerminating = true)]
+        [OperationContract(IsTerminating = true, IsOneWay = true)]
         void Disconnect();
 
         [OperationContract(IsOneWay = true)]
@@ -71,6 +71,15 @@ namespace FiresecAPI
 
         [OperationContract]
         string DeviceCustomFunctionExecute(DeviceConfiguration deviceConfiguration, Guid deviceUID, string functionName);
+
+        [OperationContract]
+        string DeviceGetGuardUsersList(DeviceConfiguration deviceConfiguration, Guid deviceUID);
+
+        [OperationContract]
+        string DeviceSetGuardUsersList(DeviceConfiguration deviceConfiguration, Guid deviceUID, string users);
+
+        [OperationContract]
+        string DeviceGetMDS5Data(DeviceConfiguration deviceConfiguration, Guid deviceUID);
 
         [OperationContract]
         SystemConfiguration GetSystemConfiguration();
@@ -147,9 +156,6 @@ namespace FiresecAPI
         [OperationContract]
         [FaultContract(typeof(FiresecException))]
         string Test();
-
-        [OperationContract]
-        void StopProgress();
     }
 
     public class FiresecException : Exception
