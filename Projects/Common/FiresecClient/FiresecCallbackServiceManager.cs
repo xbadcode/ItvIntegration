@@ -2,6 +2,9 @@
 using System.ServiceModel;
 using System.Threading;
 using Common;
+using System.Net;
+using System.Net.Sockets;
+using System.Net.NetworkInformation;
 
 namespace FiresecClient
 {
@@ -13,11 +16,11 @@ namespace FiresecClient
         public static void Open(string clientCallbackAddress)
         {
             _clientCallbackAddress = clientCallbackAddress;
-            Thread thread = new Thread(OnOpen);
+            var thread = new Thread(OnOpen);
             thread.Start();
         }
 
-        public static void OnOpen()
+        static void OnOpen()
         {
             Close();
 

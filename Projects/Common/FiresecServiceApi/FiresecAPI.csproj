@@ -137,8 +137,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddressConverter.cs" />
-    <Compile Include="CallbackService\IFiresecCallbackService.cs" />
+    <Compile Include="..\Common\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
+    <Compile Include="IFiresecServiceSKUD.cs" />
+    <Compile Include="Models\AddressConverter.cs" />
+    <Compile Include="IFiresecCallbackService.cs" />
     <Compile Include="IFiresecCallback.cs" />
     <Compile Include="IFiresecService.cs" />
     <Compile Include="Models\Configuration\FullConfiguration.cs" />
@@ -177,6 +181,11 @@
     <Compile Include="Models\Security\PermissionType.cs" />
     <Compile Include="Models\Security\RemoteAccessType.cs" />
     <Compile Include="Models\Security\UserRole.cs" />
+    <Compile Include="Models\Skud\ActionResult.cs" />
+    <Compile Include="Models\Skud\EmployeeCard.cs" />
+    <Compile Include="Models\Skud\EmployeeCardIndex.cs" />
+    <Compile Include="Models\Skud\EmployeeCardIndexFilter.cs" />
+    <Compile Include="Models\Skud\SkudPerson.cs" />
     <Compile Include="Models\System\ArchiveDefaultState.cs" />
     <Compile Include="Models\System\ArchiveDefaultStateType.cs" />
     <Compile Include="Models\System\ArchiveFilter.cs" />
@@ -204,12 +213,9 @@
     <Compile Include="Models\States\DriverDriverState.cs" />
     <Compile Include="Models\States\ParentDeviceState.cs" />
     <Compile Include="Models\Configuration\SystemConfiguration.cs" />
-    <Compile Include="XModels\Binary\BinaryFormatterBase.cs" />
-    <Compile Include="XModels\Binary\DeviceBinaryFormatter.cs" />
+    <Compile Include="OperationResult.cs" />
     <Compile Include="XModels\Configuration\XDeviceConfiguration.cs" />
     <Compile Include="XModels\Configuration\XDriversConfiguration.cs" />
-    <Compile Include="XModels\Configuration\XManager.cs" />
-    <Compile Include="XModels\Device\DeviceCreationExtention.cs" />
     <Compile Include="XModels\Device\XDevice.cs" />
     <Compile Include="XModels\Device\XDeviceParameter.cs" />
     <Compile Include="XModels\Device\XProperty.cs" />
