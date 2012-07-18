@@ -32,7 +32,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,7 +55,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -70,7 +70,7 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -119,8 +119,6 @@
     </Compile>
     <Compile Include="CallbackAddressHelper.cs" />
     <Compile Include="Extentions\DeviceCreationExtention.cs" />
-    <Compile Include="Extentions\DevicePresentationZoneExtention.cs" />
-    <Compile Include="Extentions\DeviceStateDisableExtention.cs" />
     <Compile Include="Extentions\XDeviceCreationExtention.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="FiresecCallbackService.cs" />
@@ -128,10 +126,18 @@
     <Compile Include="FiresecEventSubscriber.cs" />
     <Compile Include="FiresecManager.Configuration.cs" />
     <Compile Include="FiresecManager.cs" />
+    <Compile Include="FiresecManager.Disabling.cs" />
+    <Compile Include="FiresecManager.PresentationZone.cs" />
     <Compile Include="FiresecServiceFactory.cs" />
     <Compile Include="ItvManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SafeFiresecService.cs" />
+    <Compile Include="SafeFiresecService.Operations.cs" />
     <Compile Include="Validation\BaseError.cs" />
     <Compile Include="Validation\DeviceError.cs" />
     <Compile Include="Validation\DirectionError.cs" />
@@ -168,9 +174,19 @@
       <Project>{75DDFD5C-6572-4D90-961A-4E08D65B8FE7}</Project>
       <Name>FiresecAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Infrustructure.Plans\Infrustructure.Plans.csproj">
+      <Project>{DA2A8431-7328-4AE8-926F-E191700577A1}</Project>
+      <Name>Infrustructure.Plans</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FiresecManager.SKUD.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -180,7 +196,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>if /I "$(ConfigurationName)" == "Release" Eazfuscator.NET.exe "$(TargetPath)" --msbuild-project-path "$(ProjectPath)" --msbuild-project-configuration "$(ConfigurationName)" --msbuild-project-platform "$(PlatformName)" --msbuild-solution-path "$(SolutionPath)" -n --newline-flush -v 3.2</PostBuildEvent>
-  </PropertyGroup>
 </Project>

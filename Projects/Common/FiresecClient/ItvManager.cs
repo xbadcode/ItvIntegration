@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FiresecAPI.Models;
-using System;
 
 namespace FiresecClient
 {
@@ -25,7 +25,7 @@ namespace FiresecClient
 
         public static string Connect(string serverAddress, string login, string password)
         {
-            var result = FiresecManager.Connect("ITV", serverAddress, login, password);
+			var result = FiresecManager.Connect(ClientType.Itv, serverAddress, login, password);
             if (string.IsNullOrEmpty(result))
             {
                 FiresecManager.GetConfiguration(true);
@@ -53,6 +53,16 @@ namespace FiresecClient
         {
             FiresecManager.FiresecService.ExecuteCommand(deviceUID, methodName);
         }
+
+		public static void SetZoneGuard(ulong zoneNo)
+		{
+			FiresecManager.FiresecService.SetZoneGuard(zoneNo);
+		}
+
+		public static void UnSetZoneGuard(ulong zoneNo)
+		{
+			FiresecManager.FiresecService.UnSetZoneGuard(zoneNo);
+		}
 
         public static void ResetAllStates()
         {

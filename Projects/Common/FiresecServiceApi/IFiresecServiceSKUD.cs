@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.ServiceModel;
 using FiresecAPI.Models.Skud;
 
@@ -11,15 +8,22 @@ namespace FiresecAPI
 	public interface IFiresecServiceSKUD
 	{
 		[OperationContract]
-		IEnumerable<EmployeeCardIndex> GetEmployees(EmployeeCardIndexFilter filter);
+		IEnumerable<EmployeeCard> GetEmployees(EmployeeCardIndexFilter filter);
 
 		[OperationContract]
 		bool DeleteEmployee(int id);
 
 		[OperationContract]
-		EmployeeCard GetEmployeeCard(int id);
+		EmployeeCardDetails GetEmployeeCard(int id);
 
 		[OperationContract]
-		int SaveEmployeeCard(EmployeeCard employeeCard);
+		int SaveEmployeeCard(EmployeeCardDetails employeeCard);
+
+		[OperationContract]
+		IEnumerable<EmployeeDepartment> GetEmployeeDepartments();
+		[OperationContract]
+		IEnumerable<EmployeeGroup> GetEmployeeGroups();
+		[OperationContract]
+		IEnumerable<EmployeePosition> GetEmployeePositions();
 	}
 }

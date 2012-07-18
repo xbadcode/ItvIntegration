@@ -1,76 +1,64 @@
 ﻿using System.Runtime.Serialization;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
+using Infrustructure.Plans.Elements;
 
 namespace FiresecAPI.Models
 {
-    [DataContract]
-    public class ElementTextBlock : ElementBase, IZIndexedElement
-    {
-        public ElementTextBlock()
-        {
-            Text = "Text";
-            ForegroundColor = Colors.Black;
-            FontSize = 10;
-            FontFamilyName = "Arial";
-        }
+	[DataContract]
+	public class ElementTextBlock : ElementBaseRectangle, IElementTextBlock, IElementZIndex, IPrimitive
+	{
+		public ElementTextBlock()
+		{
+		}
 
-        [DataMember]
-        public string Text { get; set; }
+		[DataMember]
+		public string Text { get; set; }
+		[DataMember]
+		public Color ForegroundColor { get; set; }
+		[DataMember]
+		public double FontSize { get; set; }
+		[DataMember]
+		public string FontFamilyName { get; set; }
+		[DataMember]
+		public bool Stretch { get; set; }
 
-        [DataMember]
-        public Color BackgroundColor { get; set; }
+		[DataMember]
+		public int ZIndex { get; set; }
 
-        [DataMember]
-        public Color ForegroundColor { get; set; }
+		public override ElementBase Clone()
+		{
+			ElementBase elementBase = new ElementTextBlock()
+			{
+				Text = Text,
+				BackgroundColor = BackgroundColor,
+				ForegroundColor = ForegroundColor,
+				BorderColor = BorderColor,
+				BorderThickness = BorderThickness,
+				FontSize = FontSize,
+				FontFamilyName = FontFamilyName
+			};
+			Copy(elementBase);
+			return elementBase;
+		}
 
-        [DataMember]
-        public Color BorderColor { get; set; }
+		#region IPrimitive Members
 
-        [DataMember]
-        public double BorderThickness { get; set; }
+		public Primitive Primitive
+		{
+			get { return Infrustructure.Plans.Elements.Primitive.TextBlock; }
+		}
 
-        [DataMember]
-        public double FontSize { get; set; }
+		#endregion
 
-        [DataMember]
-        public string FontFamilyName { get; set; }
-
-        [DataMember]
-        public int ZIndex { get; set; }
-
-        public override FrameworkElement Draw()
-        {
-            var textBlock = new Label()
-            {
-                Content = Text,
-                Background = new SolidColorBrush(BackgroundColor),
-                Foreground = new SolidColorBrush(ForegroundColor),
-                BorderBrush = new SolidColorBrush(BorderColor),
-                BorderThickness = new Thickness(BorderThickness),
-                FontSize = FontSize,
-                FontFamily = new FontFamily(FontFamilyName),
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-            return textBlock;
-        }
-
-        public override ElementBase Clone()
-        {
-            ElementBase elementBase = new ElementTextBlock()
-            {
-                Text = Text,
-                BackgroundColor = BackgroundColor,
-                ForegroundColor = ForegroundColor,
-                BorderColor = BorderColor,
-                BorderThickness = BorderThickness,
-                FontSize = FontSize,
-                FontFamilyName = FontFamilyName
-            };
-            Copy(elementBase);
-            return elementBase;
-        }
-    }
+		public override void SetDefault()
+		{
+			Text = "Надпись";
+			ForegroundColor = Colors.Black;
+			FontSize = 10;
+			FontFamilyName = "Arial";
+			base.SetDefault();
+			Height = 22;
+			Width = 52;
+		}
+	}
 }

@@ -16,7 +16,6 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,7 +42,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -59,7 +58,7 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -140,15 +139,31 @@
     <Compile Include="..\Common\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="DriverConfigurationParametersHelper\AMP4Helper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\BUNHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\BUZHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\DetectorsHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\ConfigurationDriverHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\DriverConfigurationParametersHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\MDUHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\MPTHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\MROHelper.cs" />
+    <Compile Include="DriverConfigurationParametersHelper\RMHelper.cs" />
     <Compile Include="IFiresecServiceSKUD.cs" />
     <Compile Include="Models\AddressConverter.cs" />
     <Compile Include="IFiresecCallbackService.cs" />
     <Compile Include="IFiresecCallback.cs" />
     <Compile Include="IFiresecService.cs" />
+    <Compile Include="Models\Archive\JournalDescriptionItem.cs" />
+    <Compile Include="Models\Archive\JournalDeviceItem.cs" />
+    <Compile Include="Models\ClientCredentials.cs" />
+    <Compile Include="Models\ClientType.cs" />
     <Compile Include="Models\Configuration\FullConfiguration.cs" />
     <Compile Include="Models\Configuration\LibraryConfiguration.cs" />
     <Compile Include="Models\Configuration\PlansConfiguration.cs" />
     <Compile Include="Models\Configuration\SecurityConfiguration.cs" />
+    <Compile Include="Models\Configuration\ConfigurationVersion.cs" />
+    <Compile Include="Models\Configuration\VersionedConfiguration.cs" />
     <Compile Include="Models\Device\DeviceCustomFunction.cs" />
     <Compile Include="Models\Device\DevicePasswordType.cs" />
     <Compile Include="Models\Device\Indicator\IndicatorColorType.cs" />
@@ -163,32 +178,25 @@
     <Compile Include="Models\Library\LibraryDevice.cs" />
     <Compile Include="Models\Library\LibraryFrame.cs" />
     <Compile Include="Models\Library\LibraryState.cs" />
-    <Compile Include="Models\Plans\ElementBasePointCollection.cs" />
-    <Compile Include="Models\Plans\ElementBasePolygon.cs" />
     <Compile Include="Models\Plans\ElementPolyline.cs" />
     <Compile Include="Models\Plans\ElementPolygon.cs" />
     <Compile Include="Models\Plans\ElementPolygonZone.cs" />
     <Compile Include="Models\Plans\ElementRectangleZone.cs" />
     <Compile Include="Models\Plans\ElementTextBlock.cs" />
-    <Compile Include="Models\Plans\ElementBase.cs" />
     <Compile Include="Models\Plans\ElementEllipse.cs" />
-    <Compile Include="Models\Plans\ElementZoneHelper.cs" />
-    <Compile Include="Models\Plans\IElementZone.cs" />
-    <Compile Include="Models\Plans\IZIndexedElement.cs" />
-    <Compile Include="Models\Plans\PlanElementsHelper.cs" />
     <Compile Include="Models\Plans\ElementRectangle.cs" />
     <Compile Include="Models\Reports\ReportType.cs" />
     <Compile Include="Models\Security\PermissionType.cs" />
     <Compile Include="Models\Security\RemoteAccessType.cs" />
     <Compile Include="Models\Security\UserRole.cs" />
-    <Compile Include="Models\Skud\ActionResult.cs" />
+    <Compile Include="Models\Skud\EmployeeDepartment.cs" />
+    <Compile Include="Models\Skud\EmployeePosition.cs" />
+    <Compile Include="Models\Skud\EmployeeGroup.cs" />
+    <Compile Include="Models\Skud\EmployeeCardDetails.cs" />
     <Compile Include="Models\Skud\EmployeeCard.cs" />
-    <Compile Include="Models\Skud\EmployeeCardIndex.cs" />
     <Compile Include="Models\Skud\EmployeeCardIndexFilter.cs" />
-    <Compile Include="Models\Skud\SkudPerson.cs" />
-    <Compile Include="Models\System\ArchiveDefaultState.cs" />
-    <Compile Include="Models\System\ArchiveDefaultStateType.cs" />
-    <Compile Include="Models\System\ArchiveFilter.cs" />
+    <Compile Include="Models\Archive\ArchiveFilter.cs" />
+    <Compile Include="Models\States\ChildDeviceState.cs" />
     <Compile Include="Models\System\BeeperType.cs" />
     <Compile Include="Models\System\InstructionType.cs" />
     <Compile Include="Models\Security\RemoteAccess.cs" />
@@ -216,6 +224,7 @@
     <Compile Include="OperationResult.cs" />
     <Compile Include="XModels\Configuration\XDeviceConfiguration.cs" />
     <Compile Include="XModels\Configuration\XDriversConfiguration.cs" />
+    <Compile Include="XModels\DatabaseType.cs" />
     <Compile Include="XModels\Device\XDevice.cs" />
     <Compile Include="XModels\Device\XDeviceParameter.cs" />
     <Compile Include="XModels\Device\XProperty.cs" />
@@ -236,6 +245,7 @@
     <Compile Include="XModels\Logic\XDeviceLogic.cs" />
     <Compile Include="XModels\States\XDeviceState.cs" />
     <Compile Include="XModels\States\XStateType.cs" />
+    <Compile Include="XModels\XBinaryBase.cs" />
     <Compile Include="XModels\Zone\XZone.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -282,6 +292,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infrustructure.Plans\Infrustructure.Plans.csproj">
+      <Project>{DA2A8431-7328-4AE8-926F-E191700577A1}</Project>
+      <Name>Infrustructure.Plans</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -290,7 +306,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>if /I "$(ConfigurationName)" == "Release" Eazfuscator.NET.exe "$(TargetPath)" --msbuild-project-path "$(ProjectPath)" --msbuild-project-configuration "$(ConfigurationName)" --msbuild-project-platform "$(PlatformName)" --msbuild-solution-path "$(SolutionPath)" -n --newline-flush -v 3.3</PostBuildEvent>
-  </PropertyGroup>
 </Project>

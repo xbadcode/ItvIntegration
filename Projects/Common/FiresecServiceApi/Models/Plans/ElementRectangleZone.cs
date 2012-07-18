@@ -1,36 +1,31 @@
 ﻿using System.Runtime.Serialization;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using Infrustructure.Plans.Elements;
 
 namespace FiresecAPI.Models
 {
-    [DataContract]
-    public class ElementRectangleZone : ElementBase, IElementZone
-    {
-        public Zone Zone { get; set; }
+	[DataContract]
+	public class ElementRectangleZone : ElementBaseRectangle, IElementZone, IPrimitive
+	{
+		[DataMember]
+		public ulong? ZoneNo { get; set; }
 
-        [DataMember]
-        public ulong? ZoneNo { get; set; }
+		public override ElementBase Clone()
+		{
+			ElementBase elementBase = new ElementRectangleZone()
+			{
+				ZoneNo = ZoneNo
+			};
+			Copy(elementBase);
+			return elementBase;
+		}
 
-        public override FrameworkElement Draw()
-        {
-            var rectangle = new Rectangle()
-            {
-                Fill = new SolidColorBrush(ElementZoneHelper.GetZoneColor(Zone)),
-            };
+		#region IPrimitive Members
 
-            return rectangle;
-        }
+		public Primitive Primitive
+		{
+			get { return Infrustructure.Plans.Elements.Primitive.RectangleZone; }
+		}
 
-        public override ElementBase Clone()
-        {
-            ElementBase elementBase = new ElementRectangleZone()
-            {
-                ZoneNo = ZoneNo
-            };
-            Copy(elementBase);
-            return elementBase;
-        }
-    }
+		#endregion
+	}
 }

@@ -4,7 +4,6 @@ using System.IO;
 using System.ServiceModel;
 using FiresecAPI.Models;
 using XFiresecAPI;
-using FiresecAPI.Models.Skud;
 
 namespace FiresecAPI
 {
@@ -12,23 +11,20 @@ namespace FiresecAPI
 	public interface IFiresecService : IFiresecServiceSKUD
 	{
 		#region Service
-		[OperationContract(IsInitiating = true)]
-		OperationResult<bool> Connect(string clientType, string clientCallbackAddress, string userName, string password);
+		[OperationContract]
+		OperationResult<bool> Connect(ClientCredentials clientCredentials, bool isNew);
 
 		[OperationContract]
 		OperationResult<bool> Reconnect(string userName, string password);
 
-		[OperationContract(IsTerminating = true, IsOneWay = true)]
-		void Disconnect();
-
 		[OperationContract(IsOneWay = true)]
-		void Subscribe();
+		void Disconnect();
 
 		[OperationContract(IsOneWay = true)]
 		void CancelProgress();
 
-        [OperationContract]
-        string GetStatus();
+		[OperationContract]
+		string GetStatus();
 
 		[OperationContract]
 		string Ping();
@@ -70,7 +66,7 @@ namespace FiresecAPI
 		void SetSecurityConfiguration(SecurityConfiguration securityConfiguration);
 
 		[OperationContract]
-		DeviceConfigurationStates GetStates();
+		DeviceConfigurationStates GetStates(bool forceConvert = false);
 		#endregion
 
 		#region Devices
@@ -125,26 +121,35 @@ namespace FiresecAPI
 		[OperationContract]
 		OperationResult<string> DeviceGetMDS5Data(DeviceConfiguration deviceConfiguration, Guid deviceUID);
 
-		[OperationContract()]
-		OperationResult<bool> AddToIgnoreList(List<Guid> deviceUIDs);
+		[OperationContract(IsOneWay = true)]
+		void AddToIgnoreList(List<Guid> deviceUIDs);
 
-		[OperationContract()]
-		OperationResult<bool> RemoveFromIgnoreList(List<Guid> deviceUIDs);
+		[OperationContract(IsOneWay = true)]
+		void RemoveFromIgnoreList(List<Guid> deviceUIDs);
 
 		[OperationContract(IsOneWay=true)]
 		void ResetStates(List<ResetItem> resetItems);
+
+		[OperationContract(IsOneWay = true)]
+		void SetZoneGuard(ulong zoneNo);
+
+		[OperationContract(IsOneWay = true)]
+		void UnSetZoneGuard(ulong zoneNo);
 
 		[OperationContract]
 		OperationResult<bool> ExecuteCommand(Guid deviceUID, string methodName);
 
 		[OperationContract]
 		OperationResult<bool> CheckHaspPresence();
+
+		[OperationContract]
+		OperationResult<List<Property>> GetConfigurationParameters(Guid deviceUID);
+
+		[OperationContract]
+		void SetConfigurationParameters(Guid deviceUID, List<Property> properties);
 		#endregion
 
 		#region Journal
-		[OperationContract]
-		OperationResult<List<JournalRecord>> ReadJournal(int startIndex, int count);
-
 		[OperationContract]
 		OperationResult<List<JournalRecord>> GetFilteredJournal(JournalFilter journalFilter);
 
@@ -152,7 +157,10 @@ namespace FiresecAPI
 		OperationResult<List<JournalRecord>> GetFilteredArchive(ArchiveFilter archiveFilter);
 
 		[OperationContract]
-		OperationResult<List<JournalRecord>> GetDistinctRecords();
+		void BeginGetFilteredArchive(ArchiveFilter archiveFilter);
+
+		[OperationContract]
+		OperationResult<List<JournalDescriptionItem>> GetDistinctDescriptions();
 
 		[OperationContract]
 		OperationResult<DateTime> GetArchiveStartDate();
@@ -189,6 +197,17 @@ namespace FiresecAPI
 
 		[OperationContract]
 		XDeviceConfiguration GetXDeviceConfiguration();
+		#endregion
+
+		#region OPC
+		[OperationContract]
+		void OPCRefresh(DeviceConfiguration deviceConfiguration);
+
+		[OperationContract]
+		void OPCRegister();
+
+		[OperationContract]
+		void OPCUnRegister();
 		#endregion
 	}
 

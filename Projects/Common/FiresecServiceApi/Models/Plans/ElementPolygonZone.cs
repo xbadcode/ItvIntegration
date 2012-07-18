@@ -1,41 +1,31 @@
 ﻿using System.Runtime.Serialization;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using Infrustructure.Plans.Elements;
 
 namespace FiresecAPI.Models
 {
-    [DataContract]
-    public class ElementPolygonZone : ElementBasePolygon, IElementZone
-    {
-        public Zone Zone { get; set; }
+	[DataContract]
+	public class ElementPolygonZone : ElementBasePolygon, IElementZone, IPrimitive
+	{
+		[DataMember]
+		public ulong? ZoneNo { get; set; }
 
-        [DataMember]
-        public ulong? ZoneNo { get; set; }
+		public override ElementBase Clone()
+		{
+			ElementBase elementBase = new ElementPolygonZone()
+			{
+				ZoneNo = ZoneNo
+			};
+			Copy(elementBase);
+			return elementBase;
+		}
 
-        public override FrameworkElement Draw()
-        {
-            if (PolygonPoints == null)
-                return null;
+		#region IPrimitive Members
 
-            var polygon = new Polygon()
-            {
-                Points = new PointCollection(PolygonPoints),
-                Fill = new SolidColorBrush(ElementZoneHelper.GetZoneColor(Zone)),
-                Stroke = new SolidColorBrush(Colors.Blue),
-                StrokeThickness = 1
-            };
-            return polygon;
-        }
+		public Primitive Primitive
+		{
+			get { return Infrustructure.Plans.Elements.Primitive.PolygonZone; }
+		}
 
-        public override ElementBase Clone()
-        {
-            ElementBase elementBase = new ElementPolygonZone()
-            {
-                ZoneNo = ZoneNo
-            };
-            Copy(elementBase);
-            return elementBase;
-        }
-    }
+		#endregion
+	}
 }

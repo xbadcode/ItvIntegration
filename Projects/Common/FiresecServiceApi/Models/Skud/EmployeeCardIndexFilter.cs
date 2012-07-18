@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace FiresecAPI.Models.Skud
 {
@@ -10,6 +6,18 @@ namespace FiresecAPI.Models.Skud
 	public class EmployeeCardIndexFilter
 	{
 		[DataMember]
-		public int Id { get; set; }
+		public string ClockNumber { get; set; }
+		[DataMember]
+		public string LastName { get; set; }
+		[DataMember]
+		public string FirstName { get; set; }
+		[DataMember]
+		public string SecondName { get; set; }
+		[DataMember]
+		public int? DepartmentId { get; set; }
+		[DataMember]
+		public int? PositionId { get; set; }
+		[DataMember]
+		public int? GroupId { get; set; }
 	}
 }

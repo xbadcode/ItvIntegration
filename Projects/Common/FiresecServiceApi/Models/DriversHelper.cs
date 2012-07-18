@@ -48,7 +48,7 @@ namespace FiresecAPI.Models
             DriverDataList.Add(new DriverData("ABDE5AF2-2B77-4421-879C-2A14E7F056B2", 2, "COM порт (V2)", DriverType.OLD_ComPort_V1));
             DriverDataList.Add(new DriverData("6298807D-850B-4C65-8792-A4EAB2A4A72A", 0, "Страница", DriverType.Page));
             DriverDataList.Add(new DriverData("E486745F-6130-4027-9C01-465DE5415BBF", 0, "Индикатор", DriverType.Indicator));
-            DriverDataList.Add(new DriverData("7C4B1A3E-BC00-4542-9AB7-061D2AE92BA2", 0, "Направление", DriverType.Direction));
+            DriverDataList.Add(new DriverData("7C4B1A3E-BC00-4542-9AB7-061D2AE92BA2", 0, "Направление", DriverType.PDUDirection));
             DriverDataList.Add(new DriverData("B476541B-5298-4B3E-A9BA-605B839B1011", 0, "Прибор Рубеж-2AM", DriverType.Rubezh_2AM));
             DriverDataList.Add(new DriverData("02CE2CC4-D71F-4EAA-ACCC-4F2E870F548C", 0, "БУНС", DriverType.BUNS));
             DriverDataList.Add(new DriverData("A7BB2FD0-0088-49AE-8C04-7D6FA22C79D6", 0, "БУНС-2", DriverType.BUNS_2));
@@ -82,8 +82,6 @@ namespace FiresecAPI.Models
             DriverDataList.Add(new DriverData("29F67E91-AD29-410C-B473-EFD341AF1D79", 0, "Технологическая адресная метка АМ4-Т", DriverType.AM4_T));
             DriverDataList.Add(new DriverData("A15D9258-D5B5-4A81-A60A-3C9A308FB528", 0, "Пожарная адресная метка АМ4-П", DriverType.AM4_P));
             DriverDataList.Add(new DriverData("1B6D6509-DEF0-42B2-B31C-F8383040BF18", 0, "Охранная адресная метка АМ4-О", DriverType.AM4_O));
-            //DriverDataList.Add(new DriverData("44EEDF03-0F4C-4EBA-BD36-28F96BC6B16E", 0, "Модуль Управления Клапанами Дымоудаления", DriverType.MUKD));
-            //DriverDataList.Add(new DriverData("B603CEBA-A3BF-48A0-BFC8-94BF652FB72A", 0, "Модуль Управления Клапанами Огнезащиты", DriverType.MUKO));
             DriverDataList.Add(new DriverData("AF05094E-4556-4CEE-A3F3-981149264E89", 0, "Насосная Станция", DriverType.PumpStation));
             DriverDataList.Add(new DriverData("8BFF7596-AEF4-4BEE-9D67-1AE3DC63CA94", 0, "Насос", DriverType.Pump));
             DriverDataList.Add(new DriverData("68E8E353-8CFC-4C54-A1A8-D6B6BF4FD20F", 0, "Жокей-насос", DriverType.JokeyPump));
@@ -102,6 +100,9 @@ namespace FiresecAPI.Models
             DriverDataList.Add(new DriverData("AB3EF7B1-68AD-4A1B-88A8-997357C3FC5B", 0, "Модуль радиоканала МРК-30", DriverType.MRK_30));
             DriverDataList.Add(new DriverData("D57CDEF3-ACBC-4773-955E-22A1F016D025", 0, "Ручной радиоканальный извещатель ИПР513-11", DriverType.RadioHandDetector));
             DriverDataList.Add(new DriverData("CFD407D1-5D19-43EC-9650-A86EC4422EC6", 0, "Пожарный дымовой радиоканальный извещатель ИП 212-64Р", DriverType.RadioSmokeDetector));
+			DriverDataList.Add(new DriverData("713702A8-E3A1-4328-9A43-DE9CB5167133", 0, "Модуль речевого оповещения (исполнение 2)", DriverType.MRO_2));
+			DriverDataList.Add(new DriverData("8DA221DE-A2BF-4C71-AE63-B9C1E2CA024B", 0, "Вентилятор", DriverType.Fan));
+			DriverDataList.Add(new DriverData("8A18E2E6-7ED7-4D3F-8DFA-1E042671F072", 0, "Клапан", DriverType.Klapan));
             DriverDataList.Add(new DriverData("CD0E9AA0-FD60-48B8-B8D7-F496448FADE6", 0, "USB преобразователь МС-2", DriverType.MS_1));
             DriverDataList.Add(new DriverData("FDECE1B6-A6C6-4F89-BFAE-51F2DDB8D2C6", 0, "USB преобразователь МС-1", DriverType.MS_2));
             DriverDataList.Add(new DriverData("F36B2416-CAF3-4A9D-A7F1-F06EB7AAA76E", 0, "USB Канал МС-2", DriverType.USB_Channel_2));
@@ -114,8 +115,6 @@ namespace FiresecAPI.Models
             DriverDataList.Add(new DriverData("39DBC715-C4B5-4AE6-A809-4F214BBBD6C1", 1, "USB Рубеж-2ОП", DriverType.USB_Rubezh_2OP));
             DriverDataList.Add(new DriverData("4A3D1FA3-4F13-44D8-B9AD-825B53416A71", 1, "USB БУНС", DriverType.USB_BUNS));
             DriverDataList.Add(new DriverData("64CB0AB4-D9BE-4C71-94A1-CF24406DAF92", 1, "USB БУНС-2", DriverType.USB_BUNS_2));
-            //DriverDataList.Add(new DriverData("zone", 0, "zone"));
-            //DriverDataList.Add(new DriverData("monitor", 0, "monitor"));
         }
 
         public static List<DriverType> PanelDrivers

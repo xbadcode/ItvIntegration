@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Net;
 using System.Net.Sockets;
 
@@ -35,6 +34,7 @@ namespace Common
                     }
                     catch (SocketException e)
                     {
+						Logger.Error(e, "Обработано исключение при вызове ClientCallbackAddress.Port");
                         port = rnd.Next(9000, 9100);
                     }
                 }

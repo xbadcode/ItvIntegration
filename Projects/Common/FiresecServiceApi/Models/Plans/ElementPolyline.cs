@@ -1,55 +1,37 @@
 ﻿using System.Runtime.Serialization;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using Infrustructure.Plans.Elements;
 
 namespace FiresecAPI.Models
 {
-    [DataContract]
-    public class ElementPolyline : ElementBasePointCollection, IZIndexedElement
-    {
-        public ElementPolyline()
-        {
-            BackgroundColor = Colors.Black;
-            BorderThickness = 1;
+	[DataContract]
+	public class ElementPolyline : ElementBasePolyline, IElementZIndex, IPrimitive
+	{
+		public ElementPolyline()
+		{
+		}
 
-            PolygonPoints = new PointCollection();
-            PolygonPoints.Add(new Point(0, 0));
-            PolygonPoints.Add(new Point(100, 100));
-        }
+		[DataMember]
+		public int ZIndex { get; set; }
 
-        [DataMember]
-        public Color BackgroundColor { get; set; }
+		public override ElementBase Clone()
+		{
+			ElementPolyline elementLine = new ElementPolyline()
+			{
+				BackgroundColor = BackgroundColor,
+				BorderThickness = BorderThickness,
+				Points = Points.Clone()
+			};
+			Copy(elementLine);
+			return elementLine;
+		}
 
-        [DataMember]
-        public double BorderThickness { get; set; }
+		#region IPrimitive Members
 
-        [DataMember]
-        public int ZIndex { get; set; }
+		public Primitive Primitive
+		{
+			get { return Infrustructure.Plans.Elements.Primitive.Polyline; }
+		}
 
-        public override FrameworkElement Draw()
-        {
-            var polyline = new Polyline()
-            {
-                Points = new PointCollection(PolygonPoints),
-                Stroke = new SolidColorBrush(BackgroundColor),
-                Fill = new SolidColorBrush(Colors.Transparent),
-                StrokeThickness = BorderThickness
-            };
-
-            return polyline;
-        }
-
-        public override ElementBase Clone()
-        {
-            ElementPolyline elementLine = new ElementPolyline()
-            {
-                BackgroundColor = BackgroundColor,
-                BorderThickness = BorderThickness,
-                PolygonPoints = PolygonPoints.Clone()
-            };
-            Copy(elementLine);
-            return elementLine;
-        }
-    }
+		#endregion
+	}
 }

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.ServiceModel;
-using System.Threading;
-using Common;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.NetworkInformation;
+using System.Threading;
 
 namespace FiresecClient
 {
@@ -13,7 +10,8 @@ namespace FiresecClient
         public static string GetFreeClientCallbackAddress()
         {
             var freePort = FindNextAvailablePort(9000);
-            return "net.tcp://localhost:" + freePort + "/FiresecCallbackService/";
+            //return "net.tcp://localhost:" + freePort + "/FiresecCallbackService/";
+			return "net.tcp://127.0.0.1:" + freePort + "/FiresecCallbackService/";
         }
         
         private const string PortReleaseGuid = "8875BD8E-4D5B-11DE-B2F4-691756D89593";

@@ -144,9 +144,6 @@ namespace FiresecAPI.Models
         public bool IsNotValidateZoneAndChildren { get; set; }
 
         [DataMember]
-        public bool CanControl { get; set; }
-
-        [DataMember]
         public bool IsBUtton { get; set; }
 
         [DataMember]
@@ -208,5 +205,11 @@ namespace FiresecAPI.Models
 
         [DataMember]
         public bool CanMonitoringDisable { get; set; }
+
+		[DataMember]
+		public bool HasControlProperties { get; set; }
+
+		[DataMember]
+		public bool HasConfigurationProperties { get; set; }
     }
 }
