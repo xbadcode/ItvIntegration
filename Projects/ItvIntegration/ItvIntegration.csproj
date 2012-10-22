@@ -36,36 +36,44 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common, Version=1.0.1.25525, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Common, Version=1.0.1.23669, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\Common.dll</HintPath>
     </Reference>
-    <Reference Include="Controls, Version=1.0.1.25528, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Controls, Version=1.0.1.23674, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\Controls.dll</HintPath>
     </Reference>
-    <Reference Include="Firesec, Version=1.0.1.31968, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Firesec, Version=1.0.1.23676, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\Firesec.dll</HintPath>
     </Reference>
-    <Reference Include="FiresecAPI, Version=1.0.1.25329, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FiresecAPI, Version=1.0.1.23668, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\FiresecAPI.dll</HintPath>
     </Reference>
-    <Reference Include="FiresecClient, Version=1.0.1.31969, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FiresecClient, Version=1.0.1.23676, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\FiresecClient.dll</HintPath>
     </Reference>
-    <Reference Include="FiresecClient.ITV, Version=1.0.1.31969, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="FiresecClient.ITV, Version=1.0.1.23677, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\FiresecClient.ITV.dll</HintPath>
     </Reference>
-    <Reference Include="Infrastructure.Common">
+    <Reference Include="Infrastructure.Common, Version=1.0.1.23671, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\Infrastructure.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Infrustructure.Plans, Version=1.0.1.22490, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Infrustructure.Plans, Version=1.0.1.23494, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\Infrustructure.Plans.dll</HintPath>
     </Reference>
     <Reference Include="Interop.FS_Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Assemblies\Interop.FS_Types.dll</HintPath>
     </Reference>
     <Reference Include="Interop.mscoree, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Assemblies\Interop.mscoree.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -88,8 +96,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DeviceCommandViewModel.cs" />
     <Compile Include="Infrastructure\BaseViewModel.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
+    <Compile Include="JournalsViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ZonesViewModel.cs" />
     <Compile Include="ZoneViewModel.cs" />
